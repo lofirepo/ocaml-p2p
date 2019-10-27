@@ -8,7 +8,7 @@ env:
   - OCAML_VERSION=4.07 PACKAGE=p2p
   - OCAML_VERSION=4.06 PACKAGE=p2p
 
-- OCAML_VERSION=4.09 PACKAGE=cyclon
+  - OCAML_VERSION=4.09 PACKAGE=cyclon
   - OCAML_VERSION=4.09 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps"
   - OCAML_VERSION=4.08 PACKAGE=cyclon
   - OCAML_VERSION=4.08 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps"
