@@ -1,0 +1,5 @@
+(library
+ (name        p2p_vicinity_lwt)
+ (public_name p2p-vicinity-lwt)
+ (libraries   p2p p2p-vicinity lwt lwt.unix)
+ (preprocess  (pps lwt_ppx)))

@@ -1,0 +1,4 @@
+(library
+ (name        p2p_ringcast)
+ (public_name p2p-ringcast)
+ (libraries   p2p lru))

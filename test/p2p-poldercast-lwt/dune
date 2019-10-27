@@ -1,0 +1,16 @@
+(tests
+ (names test_poldercast_lwt)
+ (package p2p-poldercast-lwt)
+ (libraries
+  p2p-ringcast
+  p2p-ringcast-lwt
+  p2p-poldercast
+  p2p-poldercast-lwt
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

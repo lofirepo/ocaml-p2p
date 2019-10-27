@@ -1,0 +1,14 @@
+(tests
+ (names test_vicinity_lwt)
+ (package p2p-vicinity-lwt)
+ (libraries
+  p2p-vicinity
+  p2p-vicinity-lwt
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

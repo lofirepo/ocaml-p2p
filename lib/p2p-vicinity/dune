@@ -1,0 +1,4 @@
+(library
+ (name        p2p_vicinity)
+ (public_name p2p-vicinity)
+ (libraries   p2p))

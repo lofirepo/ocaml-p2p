@@ -1,0 +1,15 @@
+(tests
+ (names test_cyclon_lwt)
+ (package p2p-cyclon-lwt)
+ (libraries
+  p2p-cyclon
+  p2p-cyclon-lwt
+  urps
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

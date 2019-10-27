@@ -1,0 +1,14 @@
+(tests
+ (names test_ringcast_lwt)
+ (package p2p-ringcast-lwt)
+ (libraries
+  p2p-ringcast
+  p2p-ringcast-lwt
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

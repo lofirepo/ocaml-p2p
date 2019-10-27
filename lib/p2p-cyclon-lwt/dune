@@ -1,0 +1,5 @@
+(library
+ (name        p2p_cyclon_lwt)
+ (public_name p2p-cyclon-lwt)
+ (libraries   p2p p2p-cyclon lwt lwt.unix)
+ (preprocess  (pps lwt_ppx)))

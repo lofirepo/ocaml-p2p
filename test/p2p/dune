@@ -1,0 +1,4 @@
+(test
+ (name      test_view)
+ (package   p2p)
+ (libraries oUnit p2p nocrypto.unix stdint))

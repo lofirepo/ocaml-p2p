@@ -1,0 +1,9 @@
+(test
+ (name test_ringcast)
+ (package p2p-ringcast)
+ (libraries
+  p2p-ringcast
+  oUnit
+  nocrypto.unix
+ )
+)

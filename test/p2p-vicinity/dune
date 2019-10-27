@@ -1,0 +1,9 @@
+(test
+ (name test_vicinity)
+ (package p2p-vicinity)
+ (libraries
+  p2p-vicinity
+  oUnit
+  nocrypto.unix
+ )
+)

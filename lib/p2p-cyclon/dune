@@ -1,0 +1,4 @@
+(library
+ (name        p2p_cyclon)
+ (public_name p2p-cyclon)
+ (libraries   p2p))

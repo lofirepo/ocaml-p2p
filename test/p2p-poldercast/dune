@@ -1,0 +1,11 @@
+(test
+ (name test_poldercast)
+ (package p2p-poldercast)
+ (libraries
+  p2p-ringcast
+  p2p-poldercast
+  oUnit
+  nocrypto.unix
+  bitv
+ )
+)

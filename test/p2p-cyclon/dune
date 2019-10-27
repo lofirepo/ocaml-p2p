@@ -1,0 +1,9 @@
+(test
+ (name test_cyclon)
+ (package p2p-cyclon)
+ (libraries
+  p2p-cyclon
+  oUnit
+  nocrypto.unix
+ )
+)
