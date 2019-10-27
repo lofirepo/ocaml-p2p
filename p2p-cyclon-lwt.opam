@@ -12,11 +12,12 @@ bug-reports: "https://github.com/p2pcollab/ocaml-p2p/issues"
 depends:
 [
   "dune" {build & >= "1.0.0"}
+  "ounit" {with-test}
+  "nocrypto.lwt" {with-test}
+  "urps" {with-test}
   "lwt"
   "lwt_ppx"
   "p2p-cyclon"
-  "urps" {with-test}
-  "ounit" {with-test}
 ]
 build: [
   ["dune" "subst"] {pinned}

@@ -1,5 +1,5 @@
 (library
  (name        p2p_ringcast_lwt)
  (public_name p2p-ringcast-lwt)
- (libraries   p2p p2p-ringcast lwt lwt.unix lru)
+ (libraries   p2p p2p-ringcast lwt lwt.unix)
  (preprocess  (pps lwt_ppx)))

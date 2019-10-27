@@ -13,7 +13,10 @@ depends:
 [
   "dune" {build & >= "1.0.0"}
   "ounit" {with-test}
-  "psq"
+  "nocrypto.unix" {with-test}
+  "bitv"
+  "bloomf"
+  "blip"
 ]
 build: [
   ["dune" "subst"] {pinned}

@@ -1,4 +1,4 @@
 (library
  (name        p2p_poldercast)
  (public_name p2p-poldercast)
- (libraries   p2p p2p-ringcast bloomf blip))
+ (libraries   p2p p2p-ringcast bitv bloomf blip))

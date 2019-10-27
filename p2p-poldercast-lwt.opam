@@ -12,10 +12,13 @@ bug-reports: "https://github.com/p2pcollab/ocaml-poldercast/issues"
 depends:
 [
   "dune" {build & >= "1.0.0"}
-  "poldercast"
-  "lwt"
-  "lwt_ppx"
   "ounit" {with-test}
+  "nocrypto.lwt" {with-test}
+  "p2p-poldercast" {with-test}
+  "p2p-poldercast-lwt" {with-test}
+  "p2p-ringcast" {with-test}
+  "p2p-ringcast-lwt" {with-test}
+  "lwt"
 ]
 build: [
   ["dune" "subst"] {pinned}
