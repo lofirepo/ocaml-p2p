@@ -1,0 +1,48 @@
+language: c
+sudo: required
+install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-opam.sh
+script: bash -ex .travis-opam.sh
+env:
+  - OCAML_VERSION=4.09 PACKAGE=p2p
+  - OCAML_VERSION=4.08 PACKAGE=p2p
+  - OCAML_VERSION=4.07 PACKAGE=p2p
+  - OCAML_VERSION=4.06 PACKAGE=p2p
+
+- OCAML_VERSION=4.09 PACKAGE=cyclon
+  - OCAML_VERSION=4.09 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps"
+  - OCAML_VERSION=4.08 PACKAGE=cyclon
+  - OCAML_VERSION=4.08 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps"
+  - OCAML_VERSION=4.07 PACKAGE=cyclon
+  - OCAML_VERSION=4.07 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps"
+  - OCAML_VERSION=4.06 PACKAGE=cyclon
+  - OCAML_VERSION=4.06 PACKAGE=cyclon-lwt PINS="cyclon:. urps:git+https://github.com/p2pcollab/ocaml-urps
+
+  - OCAML_VERSION=4.09 PACKAGE=vicinity
+  - OCAML_VERSION=4.09 PACKAGE=vicinity-lwt PINS="vicinity:."
+  - OCAML_VERSION=4.08 PACKAGE=vicinity
+  - OCAML_VERSION=4.08 PACKAGE=vicinity-lwt PINS="vicinity:."
+  - OCAML_VERSION=4.07 PACKAGE=vicinity
+  - OCAML_VERSION=4.07 PACKAGE=vicinity-lwt PINS="vicinity:."
+  - OCAML_VERSION=4.06 PACKAGE=vicinity
+  - OCAML_VERSION=4.06 PACKAGE=vicinity-lwt PINS="vicinity:."
+
+  - OCAML_VERSION=4.09 PACKAGE=ringcast
+  - OCAML_VERSION=4.09 PACKAGE=ringcast-lwt PINS="ringcast:."
+  - OCAML_VERSION=4.08 PACKAGE=ringcast
+  - OCAML_VERSION=4.08 PACKAGE=ringcast-lwt PINS="ringcast:."
+  - OCAML_VERSION=4.07 PACKAGE=ringcast
+  - OCAML_VERSION=4.07 PACKAGE=ringcast-lwt PINS="ringcast:."
+  - OCAML_VERSION=4.06 PACKAGE=ringcast
+  - OCAML_VERSION=4.06 PACKAGE=ringcast-lwt PINS="ringcast:."
+
+  - OCAML_VERSION=4.09 PACKAGE=poldercast PINS="blip:git+https://github.com/p2pcollab/ocaml-blip"
+  - OCAML_VERSION=4.09 PACKAGE=poldercast-lwt PINS="poldercast:."
+  - OCAML_VERSION=4.08 PACKAGE=poldercast PINS="blip:git+https://github.com/p2pcollab/ocaml-blip"
+  - OCAML_VERSION=4.08 PACKAGE=poldercast-lwt PINS="poldercast:."
+  - OCAML_VERSION=4.07 PACKAGE=poldercast PINS="blip:git+https://github.com/p2pcollab/ocaml-blip"
+  - OCAML_VERSION=4.07 PACKAGE=poldercast-lwt PINS="poldercast:."
+  - OCAML_VERSION=4.06 PACKAGE=poldercast PINS="blip:git+https://github.com/p2pcollab/ocaml-blip"
+  - OCAML_VERSION=4.06 PACKAGE=poldercast-lwt PINS="poldercast:."
+os:
+  - linux
+  - osx
