@@ -1,0 +1,63 @@
+{
+  "nodes": {
+    "blip": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1614035583,
+        "narHash": "sha256-3Rydks6UOo1GxEmsZdQGOIw0YhujCHfuvmSjWmj0Gds=",
+        "owner": "p2pcollab",
+        "repo": "ocaml-blip",
+        "rev": "f0a3d28514518e4fc79bd4589e306fb031ac316a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "p2pcollab",
+        "ref": "master",
+        "repo": "ocaml-blip",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1614032878,
+        "narHash": "sha256-c0O68gR5bX/D++9oM250oRNBNeNtL5l+j7/NdoINX/s=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7b9655158eb91c8fdd0d9f97a6a8ee812f2b1ead",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1614024805,
+        "narHash": "sha256-xEDegq9Y641s3B2EBWZo+lu6KowpO/Itujdg7NHkjpw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "911d003b1f4c9f2f07ec4ff2e13e7f3c3f4d5ac7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "blip": "blip",
+        "nixpkgs": "nixpkgs_2"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
