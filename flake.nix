@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/master";
     blip.url = "github:p2pcollab/ocaml-blip/master";
+    urps.url = "github:p2pcollab/ocaml-urps/master";
   };
 
-  outputs = { self, nixpkgs, blip }: {
+  outputs = { self, nixpkgs, blip, urps }: {
     packages.x86_64-linux.ocaml-bloomf =
       with import nixpkgs { system = "x86_64-linux"; };
       ocamlPackages.buildDunePackage rec {
@@ -34,20 +35,21 @@
         useDune2 = true;
 
         buildInputs = with pkgs.ocamlPackages; [
+          self.packages.x86_64-linux.ocaml-bloomf
           blip.packages.x86_64-linux.ocaml-bitv
           blip.packages.x86_64-linux.ocaml-blip
-          self.packages.x86_64-linux.ocaml-bloomf
+          urps.packages.x86_64-linux.ocaml-urps
           fmt
           lru
           lwt
           lwt_ppx
           nocrypto
-          ounit
           stdint
         ];
-        buildPhase = ''
-          dune build
-        '';
+        nativeBuildInputs = with pkgs.ocamlPackages; [
+          odoc
+          ounit
+        ];
       };
 
     defaultPackage.x86_64-linux = self.packages.x86_64-linux.ocaml-p2p;
