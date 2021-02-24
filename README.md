@@ -54,3 +54,8 @@ It can be consulted [online][doc] or via `odig`, e.g.:
     ...
 
 [doc]: https://p2pcollab.net/doc/ocaml/
+
+
+## License information
+
+This project is available as open source under the terms of AGPL-3.0-only license. However, for accurate information, please check individual files. As well as for copyright information. 
