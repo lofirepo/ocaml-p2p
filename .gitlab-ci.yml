@@ -9,13 +9,16 @@ default:
     - test -d .nix || cp -a /nix .nix
     - mount --bind .nix /nix
     - mkdir -p /etc/nix
-    - echo 'experimental-features = nix-command flakes' > /etc/nix/nix.conf
+    - echo keep-outputs = true >> /etc/nix/nix.conf
+    - echo keep-derivations = true >> /etc/nix/nix.conf
+    - echo experimental-features = nix-command flakes >> /etc/nix/nix.conf
     - nix-env -iA nixpkgs.nixFlakes nixpkgs.git
 
 build:
   stage: build
   script:
     - nix build
-    - nix build '.#ocamlPackages_4_10.p2p'
-    - nix build '.#ocamlPackages_4_11.p2p'
-    #- nix build '.#ocamlPackages_4_12.p2p'
+    - nix build -o ocamlPackages_4_10.blip '.#ocamlPackages_4_10.blip'
+    - nix build -o ocamlPackages_4_11.blip '.#ocamlPackages_4_11.blip'
+    #- nix build -o ocamlPackages_4_12.blip '.#ocamlPackages_4_12.blip'
+    - nix-collect-garbage -d
