@@ -2,56 +2,90 @@
   description = "OCaml P2P libraries";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
     blip.url = "github:p2pcollab/ocaml-blip/master";
     urps.url = "github:p2pcollab/ocaml-urps/master";
   };
 
-  outputs = { self, nixpkgs, blip, urps }: {
-    packages.x86_64-linux.ocaml-bloomf =
-      with import nixpkgs { system = "x86_64-linux"; };
-      ocamlPackages.buildDunePackage rec {
-        pname = "bloomf";
-        version = "0.1.0-bits";
-        src = fetchFromGitHub {
-          owner = "p2pcollab";
-          repo = pname;
-          rev = "cbffe83255cb12f5117825f8f8ebf363e18bd627";
-          sha256 = "0p4l8fib72vmbyk5izlsfawyxfz3wgcg2c2vglqf5103y28xi1jg";
-        };
-        useDune2 = true;
+  outputs = { self, nixpkgs, blip, urps }:
+    let
+      supportedSystems = [
+        "x86_64-linux" "aarch64-linux" "armv7l-linux"
+        "x86_64-darwin" "aarch64-darwin"
+      ];
+      supportedOcamlPackages = [
+        "ocamlPackages_4_10"
+        "ocamlPackages_4_11"
+        "ocamlPackages_4_12"
+      ];
+      defaultOcamlPackages = "ocamlPackages_4_11";
 
-        buildInputs = with pkgs.ocamlPackages; [
-          blip.packages.x86_64-linux.ocaml-bitv
-        ];
+      forAllOcamlPackages = nixpkgs.lib.genAttrs supportedOcamlPackages;
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      nixpkgsFor =
+        forAllSystems (system:
+          import nixpkgs {
+            inherit system;
+            overlays = [ self.overlay ];
+          });
+    in
+      {
+        overlay = final: prev:
+          with final;
+          let mkOcamlPackages = prevOcamlPackages:
+                with prevOcamlPackages;
+                let ocamlPackages = {
+                      inherit ocaml;
+                      inherit findlib;
+                      inherit ocamlbuild;
+                      inherit opam-file-format;
+                      inherit buildDunePackage;
+
+                      p2p =
+                        buildDunePackage rec {
+                          pname = "p2p";
+                          version = "0.0.1";
+                          src = self;
+
+                          useDune2 = true;
+                          doCheck = true;
+
+                          nativeBuildInputs = with ocamlPackages; [
+                            odoc
+                            ounit
+                          ];
+                          buildInputs = with ocamlPackages; [
+                            bloomf
+                            bitv
+                            blip
+                            urps
+                            fmt
+                            lru
+                            lwt
+                            lwt_ppx
+                            nocrypto
+                            stdint
+                          ];
+                        };
+                    };
+                in ocamlPackages;
+          in
+            let allOcamlPackages =
+                  forAllOcamlPackages (ocamlPackages:
+                    mkOcamlPackages (ocaml-ng.${ocamlPackages}
+                                     // blip.packages.${system}.${ocamlPackages}
+                                     // urps.packages.${system}.${ocamlPackages}));
+            in
+              allOcamlPackages // {
+                ocamlPackages = allOcamlPackages.${defaultOcamlPackages};
+              };
+
+        packages =
+          forAllSystems (system:
+            forAllOcamlPackages (ocamlPackages:
+              nixpkgsFor.${system}.${ocamlPackages}));
+
+        defaultPackage =
+          forAllSystems (system:
+            nixpkgsFor.${system}.ocamlPackages.p2p);
       };
-
-    packages.x86_64-linux.ocaml-p2p =
-      with import nixpkgs { system = "x86_64-linux"; };
-      ocamlPackages.buildDunePackage rec {
-        pname = "p2p";
-        version = "0.0.1";
-        src = self;
-        useDune2 = true;
-
-        buildInputs = with pkgs.ocamlPackages; [
-          self.packages.x86_64-linux.ocaml-bloomf
-          blip.packages.x86_64-linux.ocaml-bitv
-          blip.packages.x86_64-linux.ocaml-blip
-          urps.packages.x86_64-linux.ocaml-urps
-          fmt
-          lru
-          lwt
-          lwt_ppx
-          nocrypto
-          stdint
-        ];
-        nativeBuildInputs = with pkgs.ocamlPackages; [
-          odoc
-          ounit
-        ];
-      };
-
-    defaultPackage.x86_64-linux = self.packages.x86_64-linux.ocaml-p2p;
-  };
 }
