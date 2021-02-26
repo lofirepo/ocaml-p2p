@@ -2,11 +2,11 @@
   description = "OCaml P2P libraries";
 
   inputs = {
-    blip.url = "github:p2pcollab/ocaml-blip/master";
-    urps.url = "github:p2pcollab/ocaml-urps/master";
+    blipPkgs.url = "github:p2pcollab/ocaml-blip/master";
+    urpsPkgs.url = "github:p2pcollab/ocaml-urps/master";
   };
 
-  outputs = { self, nixpkgs, blip, urps }:
+  outputs = { self, nixpkgs, blipPkgs, urpsPkgs }:
     let
       supportedSystems = [
         "x86_64-linux" "aarch64-linux" "armv7l-linux"
@@ -19,7 +19,7 @@
       ];
       defaultOcamlPackages = "ocamlPackages_4_11";
 
-      forAllOcamlPackages = nixpkgs.lib.genAttrs supportedOcamlPackages;
+      forAllOcamlPackages = nixpkgs.lib.genAttrs (supportedOcamlPackages ++ [ "ocamlPackages" ]);
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor =
         forAllSystems (system:
@@ -33,7 +33,7 @@
           with final;
           let mkOcamlPackages = prevOcamlPackages:
                 with prevOcamlPackages;
-                let ocamlPackages = {
+                let ocamlPackages = rec {
                       inherit ocaml;
                       inherit findlib;
                       inherit ocamlbuild;
@@ -52,6 +52,7 @@
                           nativeBuildInputs = with ocamlPackages; [
                             odoc
                             ounit
+                            utop
                           ];
                           buildInputs = with ocamlPackages; [
                             bloomf
@@ -72,8 +73,8 @@
             let allOcamlPackages =
                   forAllOcamlPackages (ocamlPackages:
                     mkOcamlPackages (ocaml-ng.${ocamlPackages}
-                                     // blip.packages.${system}.${ocamlPackages}
-                                     // urps.packages.${system}.${ocamlPackages}));
+                                     // blipPkgs.packages.${system}.${ocamlPackages}
+                                     // urpsPkgs.packages.${system}.${ocamlPackages}));
             in
               allOcamlPackages // {
                 ocamlPackages = allOcamlPackages.${defaultOcamlPackages};

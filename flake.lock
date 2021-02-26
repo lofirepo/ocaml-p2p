@@ -1,15 +1,15 @@
 {
   "nodes": {
-    "blip": {
+    "blipPkgs": {
       "inputs": {
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1614130281,
-        "narHash": "sha256-QFdV3GeVdgGj+Q0Hbs1rJO3pQUY6MbDGVv5FrcReoCg=",
+        "lastModified": 1614198452,
+        "narHash": "sha256-t0ki0aKgnuVzAXq1mbrZaXtmHVOuAyR6X7p+HaVG3zI=",
         "owner": "p2pcollab",
         "repo": "ocaml-blip",
-        "rev": "698138b5e5edad07712e69980cc54a9b6d46f7fc",
+        "rev": "c4586ce6d4d8a2e00485694d10ec8457d7ea726c",
         "type": "github"
       },
       "original": {
@@ -35,11 +35,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1614130495,
-        "narHash": "sha256-xa1AF1UUuL7ryEKhb2HL8Y1UhxfnEvO2M5GfE291JMc=",
+        "lastModified": 1614298438,
+        "narHash": "sha256-NawDpCi0QjLNSfEB5xB7BL3L0wI7E9HWi/hbaFsWrks=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "54a39ccd7eb0d4f8f276599f0a96d25cc964393f",
+        "rev": "09989a2b4ce23ef41099a3e45c80847a326b38fc",
         "type": "github"
       },
       "original": {
@@ -63,21 +63,21 @@
     },
     "root": {
       "inputs": {
-        "blip": "blip",
+        "blipPkgs": "blipPkgs",
         "nixpkgs": "nixpkgs_2",
-        "urps": "urps"
+        "urpsPkgs": "urpsPkgs"
       }
     },
-    "urps": {
+    "urpsPkgs": {
       "inputs": {
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1614130246,
-        "narHash": "sha256-scSyK3fA+V56oyyJohx4xkjlk2Xg6+GxEEUxxKypmz8=",
+        "lastModified": 1614198975,
+        "narHash": "sha256-tNS9SMfbqc3OYabusPn0xXztCphj5651ARXExKlp49w=",
         "owner": "p2pcollab",
         "repo": "ocaml-urps",
-        "rev": "319c6ac5eda8c14595a6992090c33f249a818999",
+        "rev": "f26a61f05f6affb99335c6466bfa4f8bfa2349f6",
         "type": "github"
       },
       "original": {
