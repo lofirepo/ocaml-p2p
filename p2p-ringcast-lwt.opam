@@ -1,3 +1,8 @@
+(*
+  SPDX-FileCopyrightText: 2019 TG x Thoth
+  SPDX-License-Identifier: AGPL-3.0-only
+*)
+
 opam-version: "2.0"
 name: "ringcast-lwt"
 synopsis: "RingCast: Lwt threads running the protocol"

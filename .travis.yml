@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2019 TG x Thoth
+# SPDX-License-Identifier: AGPL-3.0-only
+
 language: c
 sudo: required
 install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-opam.sh

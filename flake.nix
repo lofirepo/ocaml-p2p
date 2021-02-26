@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2019 TG x Thoth
+# SPDX-License-Identifier: AGPL-3.0-only
+
 {
   description = "OCaml P2P libraries";
 
