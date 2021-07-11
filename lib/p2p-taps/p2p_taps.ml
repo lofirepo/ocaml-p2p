@@ -30,23 +30,22 @@ similar to random peer sampling protocols such as CYCLON,
 but biases node selection based on local trust information.
 
 This implementation differs from TAPS2 in two key ways:
-1. trust values are asymmetric,
+ + trust values are asymmetric,
    thus no agreement necessary between nodes about symmetric trust values
-2. nodes only use local information to establish trust values,
+ + nodes only use local information to establish trust values,
    without relying on multi-hop trust paths.
    They store trust information about direct friends,
    and discover friends-of-friends via a private set intersection protocol;
    future work remains to research asynchronous trust that considers multi-hop trust as well.
 
 Each node maintains two views:
-+ an EXPLICIT view of nodes with associated local asymmetric trust values,
-+ a dynamic TAPS view that view exchanges can modify
+ + an EXPLICIT view of nodes with associated local asymmetric trust values,
+ + a dynamic TAPS view that view exchanges can modify
 
 The view exchange mechanism this module implements is identical to the one from TAPS2,
 with the following properties:
-
-+ Biased view selection: prefer more trusted entries when merging received views
-+ Continuous bootsrapping: continuously exchange information between both views of both types of nodes,
+ + Biased view selection: prefer more trusted entries when merging received views
+ + Continuous bootsrapping: continuously exchange information between both views of both types of nodes,
   thus TAPS-TAPS, TAPS-EXPL, EXPL-TAPS, EXPL-EXPL exchanges all happen in a randomized manner
  *)
 
