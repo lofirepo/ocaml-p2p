@@ -139,21 +139,23 @@ module Make
     | Some dnode -> Some dnode.node
     | None -> None
 
-  let initiate ~view ~xview ~me ~xchg_len =
+  let initiate ~view ~xview ~me ~view_len ~xchg_len =
+    let _view_len = view_len in
     let dst = View.oldest view in
     match dst with
     | Some dst ->
        let view = View.remove (Node.id dst) view in
-       let view = View.incr_age view in
+       let view = View.inc_age view in
        let uview = View.union view xview in
        let xchg = closest ~dst:me ~len:xchg_len ~view:uview in
-       let xchg = View.random_subset (xchg_len-1) xchg in
+       let xchg = View.uniform_sample (xchg_len-1) xchg in
        let xchg = View.add me xchg in
        (Some dst, xchg, view)
     | None ->
        (None, View.empty, view)
 
-  let respond ~view ~xview ~recvd ~src ~me ~xchg_len =
+  let respond ~view ~xview ~recvd ~src ~me ~view_len ~xchg_len =
+    let _view_len = view_len in
     let uview = View.add me view in
     let uview = View.union uview xview in
     let uview = View.filter (* remove recvd nodes *)
@@ -161,10 +163,10 @@ module Make
                   uview in
     closest ~dst:src ~len:xchg_len ~view:uview
 
-  let merge ~view ~view_len ~sent ~recvd ~xchg_len ~me =
-    let _sent = sent in
+  let merge ~view ~xview ~sent ~recvd ~src ~me ~view_len ~xchg_len =
+    let _xview = xview and _sent = sent and _src = src in
     let recvd = View.remove (Node.id me) recvd in
-    let recvd = View.random_subset xchg_len recvd in
+    let recvd = View.uniform_sample xchg_len recvd in
     let recvd = View.zero_age recvd in
     let uview = View.union view recvd in
     closest ~dst:me ~len:view_len ~view:uview
@@ -181,7 +183,7 @@ module Make
         let fanout_rnd =
           if d = 0 then fanout - 2 (* msg from self *)
           else fanout - 1 in
-        let dsts = View.random_subset fanout_rnd view in
+        let dsts = View.uniform_sample fanout_rnd view in
         if 0 < d then (* msg from successor, fwd to predecessor *)
           let dst = predecessor ~view ~dst:me in
           match dst with

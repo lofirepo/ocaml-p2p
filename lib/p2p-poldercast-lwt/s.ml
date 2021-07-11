@@ -25,9 +25,9 @@ module type POLDERCAST = sig
   type ring
   type ring_io
 
-  val init : me:node -> ?max_subs:int -> view_len:int -> xchg_len:int
+  val init : me:node -> max_subs:int -> view_len:int -> xchg_len:int
              -> period:float -> fanout:int -> seen_len:int
-             -> ?sub_list:(group * view) list -> ?stop:unit Lwt.t
+             -> sub_list:(group * view) list -> stop:unit Lwt.t option
              -> io:(group -> ring_io) -> t
   (** [init node view view_len xchg_len period fanout seen_cap]
     initializes a PolderCast instance with the following configuration.
@@ -50,7 +50,7 @@ module type POLDERCAST = sig
 
       After calling this function, [sub] cannot be called again with [t]. *)
 
-  val sub : ?view:view -> t -> group -> t
+  val sub : view:view -> t -> group -> t
   (** [sub ?view t group] subscribes to [group] with initial [view] *)
 
   val unsub : t -> gid -> (t, string) result

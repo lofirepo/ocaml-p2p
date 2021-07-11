@@ -25,9 +25,9 @@ module View = P2p.View.Make (Node_id) (Node)
 
 let my_view =
   (View.add (Node.init (u64 7L))
-     (View.add (Node.init (u64 11L) ~age:3 ~ver:2)
-        (View.add (Node.init (u64 13L))
-           (View.add (Node.init (u64 17L))
+     (View.add (Node.init (u64 11L) ~age:3 ~version:2 ~trust:0.8)
+        (View.add (Node.init (u64 13L) ~trust:0.4)
+           (View.add (Node.init (u64 17L) ~trust:0.4)
               (View.add (Node.init (u64 23L))
                  (View.add (Node.init (u64 19L))
                     (View.add (Node.init (u64 49L))
@@ -35,18 +35,18 @@ let my_view =
                           View.empty))))))))
 
 let test_view _ctx =
-  let v = View.incr_age my_view in
-  assert_equal (View.length v) 8;
-  let v = View.remove (Uint64.of_int64 17L) v in
+  let my_view = View.inc_age my_view in
+  assert_equal (View.length my_view) 8;
+  let v = View.remove (Uint64.of_int64 19L) my_view in
   assert_equal (View.length v) 7;
   let n =
     match View.find (u64 11L) v with
     | Some n -> n
     | None -> assert_failure "11 not found" in
   assert_equal (Node.id n) (u64 11L);
-  let n = Node.incr_age n in
+  let n = Node.inc_age n in
   assert_equal (Node.age n) 5;
-  assert_equal (Node.ver n) 2;
+  assert_equal (Node.version n) 2;
   let n = Node.zero_age n in
   assert_equal (Node.age n) 0;
   let n2 =
@@ -54,22 +54,39 @@ let test_view _ctx =
     | Some n -> n
     | None -> assert_failure "13 not found" in
   assert_equal (Node.age n2) 1;
-  assert_equal (Node.ver n2) 0;
+  assert_equal (Node.version n2) 0;
   assert_equal (Node.compare n n2) (-1);
   assert_equal (Node.compare n n) 0;
   assert_equal (Node.compare n2 n) 1;
+  Fmt.pf Fmt.stdout "View:\n%a\n" View.pp v;
   let l = View.to_list v in
   assert_equal l [
       Node.init (u64 7L) ~age:1;
-      Node.init (u64 11L) ~age:4 ~ver:2;
-      Node.init (u64 13L) ~age:1;
-      Node.init (u64 19L) ~age:1;
+      Node.init (u64 11L) ~age:4 ~version:2 ~trust:0.8;
+      Node.init (u64 13L) ~age:1 ~trust:0.4;
+      Node.init (u64 17L) ~age:1 ~trust:0.4;
       Node.init (u64 23L) ~age:1;
       Node.init (u64 47L) ~age:1;
       Node.init (u64 49L) ~age:1;
     ];
   let v2 = View.of_list ((Node.init (u64 11L)) :: l) in
-  assert_equal (View.to_list v2) l
+  assert_equal (View.to_list v2) l;
+
+  let rnode = match View.random my_view with
+    | Some r -> r
+    | None -> Node.init (u64 0L) in
+  let rsamp = View.uniform_sample 4 my_view in
+  let wsamp = View.weighted_sample 4 my_view in
+  let fview = View.adjust_trust 0.5 my_view in
+  let fview = View.filter_trust 0.1 fview in
+  let min = View.min_trust my_view in
+  let max = View.max_trust my_view in
+
+  Fmt.pf Fmt.stdout "Random:\n%a\n" Node.pp rnode;
+  Fmt.pf Fmt.stdout "Random sample:\n%a\n" View.pp rsamp;
+  Fmt.pf Fmt.stdout "Weighted sample:\n%a\n" View.pp wsamp;
+  Fmt.pf Fmt.stdout "Adjust trust by 0.5 & filter out entries below 0.1 trust\n%a\n" View.pp fview;
+  Fmt.pf Fmt.stdout "Trust: %.2f..%.2f\n" min max
 
 let suite =
   "suite">:::

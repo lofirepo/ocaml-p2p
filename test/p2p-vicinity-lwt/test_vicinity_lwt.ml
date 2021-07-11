@@ -22,8 +22,9 @@ let out = Fmt.stdout
 
 module Node_id = P2p.Node_id
 
+(* FIXME
 module Make_node (Node_id: P2p.S.NODE_ID)
-       : P2p_vicinity.S.NODE with type nid := Node_id.t = struct
+       : P2p.S.NODE with type nid := Node_id.t = struct
 
   module Node = P2p.Node.Make (Node_id)
   include Node
@@ -34,8 +35,9 @@ module Make_node (Node_id: P2p.S.NODE_ID)
             (Node_id.to_uint64
                (Node_id.distance (Node.id a) (Node.id b)))
 end
+ *)
 
-module Node = Make_node (Node_id)
+module Node = P2p.Node.Make (Node_id)
 module View = P2p.View.Make (Node_id) (Node)
 module Vicinity = P2p_vicinity.Make (Node_id) (Node) (View)
 

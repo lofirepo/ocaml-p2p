@@ -41,7 +41,7 @@ to determine common subscriptions of two nodes.
 module Make
          (Node_id: P2p.S.NODE_ID)
          (Group_id: P2p.S.GROUP_ID)
-         (Node: S.NODE with type nid := Node_id.t)
+         (Node: P2p.S.NODE with type nid := Node_id.t)
          (Group: P2p.S.GROUP with type gid := Group_id.t)
          (View: P2p.S.VIEW with type nid := Node_id.t
                             and type node := Node.t)
@@ -75,6 +75,7 @@ module Make
 
     let init max_subs =
       let subs = Subs.empty in
+      let max_subs = if max_subs < 1 then 1 else max_subs in
       let bf = Bloomf.create max_subs in
       let b = Bloomf.bits bf in
       { subs; bf; b; bf_dirty = false }
@@ -149,6 +150,3 @@ end
 
 (** Signatures *)
 module S = S
-
-(** Node *)
-module Node = Node

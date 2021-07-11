@@ -1,2 +1,2 @@
-(lang dune 1.3)
-(name gossip)
+(lang dune 2.8)
+(name p2p)

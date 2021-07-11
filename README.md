@@ -13,20 +13,20 @@ These libraries are distributed under the AGPL-3.0-only license.
 - RingCast: P2P hybrid dissemination
 - VICINITY: P2P clustering & topology management
 - CYCLON: Random Peer Sampling
+- TAPS: Trust-Aware Peer Sampling
+- TAC: Trust-Aware Clustering
 
-## Installation
+## Building with Nix
 
-The libraries can be installed via `opam`:
+Set up [Nix Flakes](https://nixos.wiki/wiki/Flakes), then run:
 
-    opam install p2p
-    opam install p2p-cyclon
-    opam install p2p-cyclon-lwt
-    opam install p2p-vicinity
-    opam install p2p-vicinity-lwt
-    opam install p2p-ringcast
-    opam install p2p-ringcast-lwt
-    opam install p2p-poldercast
-    opam install p2p-poldercast-lwt
+    nix build
+
+## Developing with Nix
+
+To get a development shell with all dependencies and build tools installed, run:
+
+    nix develop
 
 ## Building
 

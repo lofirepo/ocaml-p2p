@@ -1,0 +1,16 @@
+(tests
+ (names test_tac_lwt)
+ (package p2p-tac-lwt)
+ (libraries
+  p2p-tac
+  p2p-tac-lwt
+  bloomf
+  blip
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

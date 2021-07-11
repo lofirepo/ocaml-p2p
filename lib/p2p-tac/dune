@@ -1,0 +1,4 @@
+(library
+ (name        p2p_tac)
+ (public_name p2p-tac)
+ (libraries   p2p))

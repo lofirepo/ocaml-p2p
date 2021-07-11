@@ -1,0 +1,14 @@
+(tests
+ (names test_taps_lwt)
+ (package p2p-taps-lwt)
+ (libraries
+  p2p-taps
+  p2p-taps-lwt
+  lwt
+  oUnit
+  nocrypto.lwt
+ )
+ (preprocess
+  (pps lwt_ppx)
+ )
+)

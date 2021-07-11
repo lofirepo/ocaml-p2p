@@ -17,7 +17,7 @@
         "ocamlPackages_4_11"
         "ocamlPackages_4_12"
       ];
-      defaultOcamlPackages = "ocamlPackages_4_11";
+      defaultOcamlPackages = "ocamlPackages_4_12";
 
       forAllOcamlPackages = nixpkgs.lib.genAttrs (supportedOcamlPackages ++ [ "ocamlPackages" ]);
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;

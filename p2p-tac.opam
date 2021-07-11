@@ -1,0 +1,24 @@
+opam-version: "2.0"
+name: "p2p-tac"
+synopsis: "TAC - Trust-Aware Clustering"
+maintainer: "TG x Thoth <*@tg-x.net>"
+authors: ["TG x Thoth <*@tg-x.net>"]
+tags: [ "p2p" "protocol" "membership" "gossip" "trust" "clustering" "tac" ]
+license: "AGPL-3.0-only"
+homepage: "https://p2pcollab.net"
+doc: "https://p2pcollab.net/doc/ocaml/p2p-tac"
+dev-repo: "git+https://github.com/p2pcollab/ocaml-p2p.git"
+bug-reports: "https://github.com/p2pcollab/ocaml-p2p/issues"
+depends:
+[
+  "dune" {build & >= "1.0.0"}
+  "ounit" {with-test}
+  "nocrypto.unix" {with-test}
+]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+run-test: [
+  ["dune" "runtest" "-p" name "-j" jobs]
+]

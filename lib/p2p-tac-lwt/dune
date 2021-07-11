@@ -1,0 +1,5 @@
+(library
+ (name        p2p_tac_lwt)
+ (public_name p2p-tac-lwt)
+ (libraries   p2p p2p-tac lwt lwt.unix)
+ (preprocess  (pps lwt_ppx)))

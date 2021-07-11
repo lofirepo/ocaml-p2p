@@ -89,7 +89,7 @@ module Make
       stopper : unit Lwt.u option;
     }
 
-  let sub ?(view=View.empty) t group =
+  let sub ~view t group =
     let io = t.io group in
     let ring = RCL.init
                  ~me:t.me ~view ~view_len:t.view_len
@@ -109,11 +109,9 @@ module Make
        Ok { t with subs }
     | None -> Error "Group not found"
 
-  let init ~me ?max_subs ~view_len ~xchg_len ~period ~fanout ~seen_len
-        ?(sub_list = []) ?stop ~io =
-    let subs = match max_subs with
-      | Some max_subs -> Sub.init max_subs
-      | None -> Sub.empty in
+  let init ~me ~max_subs ~view_len ~xchg_len ~period ~fanout ~seen_len
+        ~sub_list ~stop ~io =
+    let subs = Sub.init max_subs in
     let (stop, stopper) =
       match stop with
       | None ->

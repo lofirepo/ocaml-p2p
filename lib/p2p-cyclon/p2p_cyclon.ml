@@ -24,28 +24,33 @@ module Make
        : P2p.S.GOSSIP with type node := Node.t
                        and type view := View.t = struct
 
-  let initiate ~view ~xview ~me ~xchg_len =
+  (** Initiate gossip exchange **)
+  let initiate ~view ~xview ~me ~view_len ~xchg_len =
+    let _view_len = view_len in
     let dst = View.oldest view in
     match dst with
     | Some dst ->
        let view = View.remove (Node.id dst) view in
-       let view = View.incr_age view in
+       let view = View.inc_age view in
        let uview = View.union view xview in
-       let xchg = View.random_subset (xchg_len - 1) uview in
+       let xchg = View.uniform_sample (xchg_len - 1) uview in
        let xchg = View.add me xchg in
        (Some dst, xchg, view)
     | None -> (* view empty *)
        (None, View.empty, view)
 
-  let respond ~view ~xview ~recvd ~src ~me ~xchg_len =
-    let _recvd = recvd and _src = src and _me = me in
+  (** Respond to gossip exchange *)
+  let respond ~view ~xview ~recvd ~src ~me ~view_len ~xchg_len =
+    let _recvd = recvd and _src = src and _me = me and _view_len = view_len in
     let uview = View.union view xview in
-    View.random_subset xchg_len uview
+    View.uniform_sample xchg_len uview
 
-  let merge ~view ~view_len ~sent ~recvd ~xchg_len ~me =
+  (** Merge received view into current view *)
+  let merge ~view ~xview ~sent ~recvd ~src ~me ~view_len ~xchg_len =
+    let _xview = xview and _src = src in
     let sent = View.remove (Node.id me) sent in
     let recvd = View.remove (Node.id me) recvd in
-    let recvd = View.random_subset xchg_len recvd in
+    let recvd = View.uniform_sample xchg_len recvd in
     let recvd = View.zero_age recvd in
     let rec merge view sent recvd =
       if 0 < View.length recvd then

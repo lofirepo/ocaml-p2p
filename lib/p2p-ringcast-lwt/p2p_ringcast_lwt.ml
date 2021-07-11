@@ -82,8 +82,8 @@ module Make
     | (Some dst) ->
        let%lwt recvd = Io.initiate_gossip t.io dst sent in
        let%lwt recvd = Io.gossip_recvd t.io dst recvd t.view in
-       t.view <- Gossip.merge ~view ~view_len:t.view_len ~me:t.me
-                   ~sent ~recvd ~xchg_len:t.xchg_len;
+       t.view <- Gossip.merge ~view ~xview:View.empty ~view_len:t.view_len
+                   ~src:dst ~me:t.me ~sent ~recvd ~xchg_len:t.xchg_len;
        let%lwt _ = Io.view_updated t.io t.me t.view in
        Lwt.return t.view
     | _ ->
@@ -111,7 +111,7 @@ module Make
       let xview = Io.get_xview t.io in
       let (dst, sent, view_before) =
         Gossip.initiate ~me:t.me ~view:t.view ~xview
-          ~xchg_len:t.xchg_len in
+          ~view_len:t.view_len ~xchg_len:t.xchg_len in
       let%lwt view_after = timeout t.period stop (initiate t dst sent view_before) in
       let _ = t.view <- match view_after with
                         | Some v -> v
@@ -138,11 +138,11 @@ module Make
   let respond t src recvd =
     let xview = Io.get_xview t.io in
     let sent = Gossip.respond ~view:t.view ~xview
-                 ~recvd ~src ~me:t.me ~xchg_len:t.xchg_len in
+                 ~recvd ~src ~me:t.me ~view_len:t.view_len ~xchg_len:t.xchg_len in
     let%lwt _ = Io.respond_gossip t.io src sent in
     let%lwt recvd = Io.gossip_recvd t.io src recvd t.view in
-    t.view <- Gossip.merge ~view:t.view ~view_len:t.view_len
-                ~sent ~recvd ~xchg_len:t.xchg_len ~me:t.me;
+    t.view <- Gossip.merge ~view:t.view ~xview ~view_len:t.view_len
+                ~sent ~recvd ~xchg_len:t.xchg_len ~src ~me:t.me;
     Lwt.return t.view
 
   (** Forward [msg] with ID [mid] from [src] to [t.fanout] nodes in [t.view] *)

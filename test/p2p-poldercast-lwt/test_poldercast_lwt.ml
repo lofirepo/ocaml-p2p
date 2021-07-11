@@ -19,7 +19,7 @@ open Stdint
 
 module Node_id = P2p.Node_id
 module Group_id = P2p.Group_id
-module Node = P2p_poldercast.Node.Make (Node_id)
+module Node = P2p.Node.Make (Node_id)
 module Group = P2p.Group.Make (Group_id)
 module View = P2p.View.Make (Node_id) (Node)
 module Msg_id = P2p.Msg_id
@@ -194,7 +194,7 @@ let () =
   let sub_list = [ (group1, view1); (group2, view2) ] in
   let pc = Poldercast_lwt.init ~me ~view_len ~xchg_len
              ~period ~fanout ~seen_len ~sub_list ~io
-             ?max_subs:None ?stop:None in
+             ~max_subs:10 ~stop:None in
 
   let timeout = Lwt_unix.sleep 5.5 in
   Lwt_main.run @@

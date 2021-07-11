@@ -1,0 +1,4 @@
+(library
+ (name        p2p_taps)
+ (public_name p2p-taps)
+ (libraries   p2p nocrypto))

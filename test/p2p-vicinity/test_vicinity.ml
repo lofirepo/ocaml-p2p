@@ -20,8 +20,9 @@ open Stdint
 
 module Node_id = P2p.Node_id
 
+(* FIXME
 module Make_node (Node_id: P2p.S.NODE_ID)
-       : P2p_vicinity.S.NODE with type nid := Node_id.t = struct
+       : P2p.S.NODE with type nid := Node_id.t = struct
 
   module Node = P2p.Node.Make (Node_id)
   include Node
@@ -32,8 +33,9 @@ module Make_node (Node_id: P2p.S.NODE_ID)
             (Node_id.to_uint64
                (Node_id.distance (Node.id a) (Node.id b)))
 end
+*)
 
-module Node = Make_node (Node_id)
+module Node = P2p.Node.Make (Node_id)
 module View = P2p.View.Make (Node_id) (Node)
 module Vicinity = P2p_vicinity.Make (Node_id) (Node) (View)
 
@@ -77,7 +79,7 @@ let test_gossip _ctx =
   printf "\nVICINITY GOSSIP\n";
   let view = my_view in
   let xview = my_view_rnd in
-  let (dst, sent, view) = Vicinity.initiate ~me ~view ~xview ~xchg_len in
+  let (dst, sent, view) = Vicinity.initiate ~me ~view ~xview ~view_len ~xchg_len in
   let recvd = my_recvd in
   let dst =
     match dst with
@@ -88,11 +90,11 @@ let test_gossip _ctx =
   assert_equal (View.length sent) xchg_len;
   pf out "Gossip received (%d):\n%a\n" (View.length recvd) View.pp recvd;
   pf out "View before gossip (%d):\n%a\n" (View.length view) View.pp view;
-  let view = Vicinity.merge ~me ~view ~view_len ~sent ~recvd ~xchg_len in
+  let view = Vicinity.merge ~me ~src:dst ~view ~xview ~sent ~recvd ~view_len ~xchg_len in
   pf out "View after gossip (%d):\n%a\n" (View.length view) View.pp view;
   assert_equal (View.length view) view_len;
   assert_equal (View.mem (Node.id me) view) false;
-  let resp = Vicinity.respond ~view ~xview ~recvd ~xchg_len ~src:me ~me in
+  let resp = Vicinity.respond ~view ~xview ~recvd ~view_len ~xchg_len ~src:me ~me in
   pf out "Gossip response:\n%a\n" View.pp resp;
   assert_equal (View.length resp) xchg_len
 

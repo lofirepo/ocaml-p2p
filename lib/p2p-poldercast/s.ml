@@ -14,19 +14,6 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *)
 
-(** Node *)
-module type NODE = sig
-
-  include P2p.S.NODE
-
-  (** Subscriptions of node *)
-  val subs : t -> Bitv.t
-
-  val set_subs : t -> Bitv.t -> t
-
-  val sim : t -> t -> float
-end
-
 (** Subscriptions of this node to groups *)
 module type SUBSCRIPTION = sig
 

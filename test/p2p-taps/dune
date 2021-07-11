@@ -1,0 +1,9 @@
+(test
+ (name test_taps)
+ (package p2p-taps)
+ (libraries
+  p2p-taps
+  oUnit
+  nocrypto.unix
+ )
+)

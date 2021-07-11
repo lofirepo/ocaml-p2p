@@ -22,7 +22,7 @@ module Node_id = P2p.Node_id
 module Group_id = P2p.Group_id
 module Msg_id = P2p.Msg_id
 
-module Node = P2p_poldercast.Node.Make (Node_id)
+module Node = P2p.Node.Make (Node_id)
 module Group = P2p.Group.Make (Group_id)
 module View = P2p.View.Make (Node_id) (Node)
 
@@ -56,9 +56,9 @@ let test_sub _ctx =
   let n42 = Node.set_subs n42 blip in
   printf "n42:\n%s" (Node.to_string n42);
 
-  let sim = Node.sim n23 n23 in
+  let sim = Blip.sim (Node.subs n23) (Node.subs n23) in
   assert_equal sim 1.;
-  let sim = Node.sim n23 n42 in
+  let sim = Blip.sim (Node.subs n23) (Node.subs n42) in
   printf "sim n23 n42 = %.2f\n" sim;
 
   let g41 = (u64 41L) in

@@ -29,7 +29,7 @@ or organizing them in a coordinate system.
     given a [Node_id], [Node], and gossip [View]. *)
 module Make
          (Node_id : P2p.S.NODE_ID)
-         (Node : S.NODE with type nid := Node_id.t)
+         (Node : P2p.S.NODE with type nid := Node_id.t)
          (View : P2p.S.VIEW with type nid := Node_id.t
                              and type node := Node.t)
        : P2p.S.GOSSIP with type node := Node.t
@@ -55,7 +55,7 @@ module Make
            (fun _a _b -> if Rng.Int.gen 2 = 0 then 1 else -1)
            (View.fold
               (fun _nid node lst ->
-                { node; sim = Node.sim dst node } :: lst)
+                { node; sim = Blip.sim (Node.subs dst) (Node.subs node) } :: lst)
               view [])) in
     List.fold_left
       (fun dview dnode ->
@@ -65,12 +65,13 @@ module Make
       View.empty
       dlist
 
-  let initiate ~view ~xview ~me ~xchg_len  =
+  let initiate ~view ~xview ~me ~view_len ~xchg_len =
+    let _view_len = view_len in
     let dst = View.oldest view in
     match dst with
     | Some dst ->
        let view = View.remove (Node.id dst) view in
-       let view = View.incr_age view in
+       let view = View.inc_age view in
        let uview = View.union view xview in
        let xchg_len = xchg_len - 1 in
        let xchg = closest ~dst:me ~xchg_len ~view:uview in
@@ -79,22 +80,18 @@ module Make
     | None ->
        (None, View.empty, view)
 
-  let respond ~view ~xview ~recvd ~src ~me ~xchg_len =
+  let respond ~view ~xview ~recvd ~src ~me ~view_len ~xchg_len =
+    let _view_len = view_len in
     let uview = View.add me view in
     let uview = View.union uview xview in
-    let uview = View.filter (* remove recvd nodes *)
-                  (fun nid _node -> not (View.mem nid recvd))
-                  uview in
+    let uview = View.filter_overlap recvd uview in
     closest ~dst:src ~xchg_len ~view:uview
 
-  let merge ~view ~view_len ~sent ~recvd ~xchg_len ~me =
-    let _sent = sent in
+  let merge ~view ~xview ~sent ~recvd ~src ~me ~view_len ~xchg_len =
+    let _sent = sent and _xview = xview and _src = src and _view_len = view_len in
     let recvd = View.remove (Node.id me) recvd in
-    let recvd = View.random_subset xchg_len recvd in
+    let recvd = View.uniform_sample xchg_len recvd in
     let recvd = View.zero_age recvd in
     let uview = View.union view recvd in
     closest ~dst:me ~xchg_len:view_len ~view:uview
 end
-
-(** Signatures *)
-module S = S

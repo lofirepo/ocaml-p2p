@@ -91,17 +91,33 @@ module type NODE = sig
   type t
   type nid
 
-  val init : ?age:int -> ?ver:int -> nid -> t
-  (** [init ?age ?ver nid] *)
+  val init : ?age:int -> ?version:int -> ?trust:float -> ?known:bool
+             -> ?subs:Bitv.t -> ?sim:float -> ?signature:Bytes.t -> nid -> t
+  (** [init ?age ?version ?subs ?signature node_id] *)
 
   val id : t -> nid
-  (** [id t] returns ID of node [t] *)
+  (** [id t] returns the ID of node [t] *)
 
   val age : t -> int
-  (** [age t] returns ID of node profile [t] *)
+  (** [age t] returns the age of node [t] *)
 
-  val ver : t -> int
-  (** [ver t] returns version of node profile [t] *)
+  val version : t -> int
+  (** [version t] returns the version of node profile [t] *)
+
+  val trust : t -> float
+  (** [trust t] returns the trust value associated with node [t] *)
+
+  val known : t -> bool
+  (** [known t] returns whether the node [t] is known locally, and thus its trust value was set explicitly *)
+
+  val subs : t -> Bitv.t
+  (** [subs t] returns the subscriptions Bloom filter of node profile [t] *)
+
+  val sim : t -> float
+  (** [sim t] returns the similarity metric for node [t] *)
+
+  val signature : t -> Bytes.t
+  (** [signature t] returns the signature of node profile [t] *)
 
   val compare : t -> t -> int
   (** [compare a b] compares IDs of nodes [a] & [b].
@@ -122,14 +138,33 @@ module type NODE = sig
   val set_age : t -> int -> t
   (** [set_age t] sets the age of node profile to [age]. *)
 
-  val incr_age : t -> t
-  (** [incr_age t] increments the age of node profile. *)
+  val inc_age : t -> t
+  (** [inc_age t] increments the age of node profile. *)
 
-  val set_ver : t -> int -> t
-  (** [set_ver t] sets the version of node profile to [ver]. *)
+  val set_version : t -> int -> t
+  (** [set_version t version] sets the version of node profile to [version]. *)
 
-  val incr_ver : t -> t
-  (** [incr_ver t] increments the version of node profile. *)
+  val adjust_trust : t -> float -> t
+  (** [adjust_trust t r] adjusts the trust value of node [t]
+      by multiplying it with [r]. *)
+
+  val set_trust : t -> float -> t
+  (** [set_trust t trust] sets the trust of node [t] to [trust]. *)
+
+  val set_known : t -> bool -> t
+  (** [set_known t known] sets the known flag for node [t]. *)
+
+  val set_subs : t -> Bitv.t -> t
+  (** [set_subs t subs] sets the Bloom filter with subscriptions to [subs]. *)
+
+  val set_sim : t -> float -> t
+  (** [set_sim t sim] sets the similarity metric for node [t] to [sim] *)
+
+  val set_signature : t -> Bytes.t -> t
+  (** [set_signature t signature] sets the version of node profile to [ver]. *)
+
+  val inc_version : t -> t
+  (** [inc_version t version] increments the version of node profile [t]. *)
 
   val to_string : t -> string
   (** [to_string t] returns a string representation of node [t] *)
@@ -193,8 +228,12 @@ module type VIEW = sig
   val random : t -> node option
   (** [random t] selects a random from view [t]. Returns [None] if [t] is empty. *)
 
-  val random_subset : int -> t -> t
-  (** [random_subset n t] selects a random subset of view [t] with [n] elements. *)
+  val uniform_sample : int -> t -> t
+  (** [uniform_sample n t] returns a uniform random sample of view [t] of length [n]. *)
+
+  val weighted_sample : int -> t -> t
+  (** [weighted_sample n t] returns a weighted random sample of view [t] of length [n],
+      weighted by their trust values. *)
 
   val union : t -> t -> t
   (** [union a b] returns the union of views [a] & [b]. *)
@@ -202,8 +241,29 @@ module type VIEW = sig
   val zero_age : t -> t
   (** [zero_age t] sets the age of all nodes in view to 0. *)
 
-  val incr_age : t -> t
-  (** [incr_age t] increments the age of all nodes in view. *)
+  val inc_age : t -> t
+  (** [inc_age t] increments the age of all nodes in view. *)
+
+  val adjust_trust : float -> t -> t
+  (** [adjust_trust r t] adjust the trust value of all nodes in [t] by multiplying each with [r]. *)
+
+  val filter_trust : float -> t -> t
+  (** [filter_trust min_trust t] remove nodes with trust value less than [min_trust] *)
+
+  val filter_overlap : t -> t -> t
+  (** [filter_overlap view t] remove entries from [t] that also exist in [view] *)
+
+  val min_trust : t -> float
+  (** [min_trust t] returns the minimum trust value in [t] *)
+
+  val max_trust : t -> float
+  (** [max_trust t] returns the maximum trust value in [t] *)
+
+  val sum_trust : t -> float
+  (** [sum_trust t] returns the sum of trust values in [t] *)
+
+  val choose_view : t -> t -> t
+  (** [choose_view t u] chooses a view at random from two views *)
 
   val filter : (nid -> node -> bool) -> t -> t
   val fold : (nid -> node -> 'a -> 'a) -> t -> 'a -> 'a
@@ -225,7 +285,8 @@ module type GOSSIP = sig
   val initiate :
     view : view
     -> xview : view
-               -> me : node
+    -> me : node
+    -> view_len : int
     -> xchg_len : int
     -> (node option * view * view)
   (** [initiate ~view ~xview ~me ~xchg_len ?distance]
@@ -247,6 +308,7 @@ module type GOSSIP = sig
     -> recvd : view
     -> src : node
     -> me : node
+    -> view_len : int
     -> xchg_len : int
     -> view
   (** [respond ~view ~xview ~recvd ~src ~me ~xchg_len]
@@ -263,11 +325,13 @@ module type GOSSIP = sig
 
   val merge :
     view : view
-    -> view_len : int
+    -> xview : view
     -> sent : view
     -> recvd : view
-    -> xchg_len : int
+    -> src : node
     -> me : node
+    -> view_len : int
+    -> xchg_len : int
     -> view
   (** [merge ~view ~view_len ~sent ~recvd ~xchg_len ~me]
       merges received entries during a gossip exchange.

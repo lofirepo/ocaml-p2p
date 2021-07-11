@@ -1,4 +1,4 @@
 (library
  (name        p2p)
  (public_name p2p)
- (libraries   fmt nocrypto stdint))
+ (libraries   fmt nocrypto stdint bitv bloomf blip))
