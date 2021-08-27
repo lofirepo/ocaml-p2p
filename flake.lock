@@ -14,7 +14,6 @@
       },
       "original": {
         "owner": "p2pcollab",
-        "ref": "master",
         "repo": "ocaml-blip",
         "type": "github"
       }
@@ -35,16 +34,18 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1625604429,
-        "narHash": "sha256-qnQTLukEtqV5XL77l72PeG2O697j8bou4TsCLt7EN7Y=",
+        "lastModified": 1629827819,
+        "narHash": "sha256-cysfDbdjTluO+UtuT6iRrf/2Lt7Qo/qRlpz9F5rz3Sc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a2cfe3fb7ee689165a5dfc35b39bc16000c68082",
+        "rev": "503209808cd613daed238e21e7a18ffcbeacebe3",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs_3": {
@@ -82,7 +83,6 @@
       },
       "original": {
         "owner": "p2pcollab",
-        "ref": "master",
         "repo": "ocaml-urps",
         "type": "github"
       }
