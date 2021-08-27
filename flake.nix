@@ -2,8 +2,9 @@
   description = "OCaml P2P libraries";
 
   inputs = {
-    blipPkgs.url = "github:p2pcollab/ocaml-blip/master";
-    urpsPkgs.url = "github:p2pcollab/ocaml-urps/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    blipPkgs.url = "github:p2pcollab/ocaml-blip";
+    urpsPkgs.url = "github:p2pcollab/ocaml-urps";
   };
 
   outputs = { self, nixpkgs, blipPkgs, urpsPkgs }:
